@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plena Captação v1.0 - Sistema Inteligente</title>
-    <meta name="description" content="Sistema inteligente de prospecção com IA integrada para a Plena Informática">
-    <meta name="theme-color" content="#000000">
-
+    <title>Plena Informática - Sistema de Captação de clientes</title>
+<meta name="description" content="Sistema Inteligente de Captação da Plena Informática para prospecção e gestão de clientes locais.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- CSS principal -->
     <link rel="stylesheet" href="assets/css/main.css">
 
-    <!-- Font Awesome -->
+    <!-- CSS IA Prospecção -->
+    <link rel="stylesheet" href="assets/css/ia-prospecting.css">
+
+    <!-- Font Awesome (ícones) -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Chart.js -->
+    <!-- Chart.js (gráficos do dashboard e relatórios) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Favicon -->
@@ -27,8 +29,8 @@
     <!-- ========== SIDEBAR ========== -->
     <nav class="sidebar">
         <div class="logo">
-            <h1>Plena Captação</h1>
-            <p class="version">v1.0</p>
+            <h1>Plena Informática</h1>
+            <p class="version">Sistema de Captação de Clientes</p>
         </div>
 
         <ul class="nav-menu">
@@ -56,15 +58,15 @@
         </ul>
 
         <div class="theme-toggle-container">
-            <button class="theme-toggle" id="themeToggle">
-                <span>🌙</span>
-                <span>Modo Claro</span>
-            </button>
+          <button class="theme-toggle" id="themeToggle" aria-label="Alternar entre modo claro e escuro">
+    <span class="theme-icon">🌙</span>
+    <span class="theme-label">Modo Claro</span>
+</button> 
         </div>
     </nav>
 
     <!-- ========== ÁREA PRINCIPAL ========== -->
-    <main class="main-content">
+    <main class="main-content" role="main">
 
         <!-- ===== HEADER FIXO NO TOPO ===== -->
         <header class="header">
@@ -82,7 +84,7 @@
                     <span>Novo Lead</span>
                 </button>
 
-                <button class="btn btn-secondary" onclick="runIAProspecting()">
+                <button class="btn btn-secondary" onclick="iaProspectingTrigger()">
                     <i class="fas fa-robot"></i>
                     <span>IA Prospecção</span>
                 </button>
@@ -113,9 +115,11 @@
             <!-- ================= DASHBOARD ================= -->
             <section id="dashboard" class="section active">
                 <div class="section-header">
-                    <h1>Dashboard Overview</h1>
-                    <p>Visão completa do seu pipeline de prospecção em São José dos Campos</p>
-                    <div class="dashboard-time" id="dashboardTime"></div>
+                    <div>
+                        <h1>Dashboard Overview</h1>
+                        <p>Visão completa do seu pipeline de prospecção em São José dos Campos</p>
+                        <div class="dashboard-time" id="dashboardTime"></div>
+                    </div>
                 </div>
 
                 <!-- Métricas principais -->
@@ -169,88 +173,116 @@
                     </div>
                 </div>
 
-                <!-- Gráficos e Recomendações IA -->
-                <div class="dashboard-content">
-                    <!-- gráficos -->
-                    <div class="charts-container">
-                        <div class="chart-card">
-                            <h3><i class="fas fa-chart-pie"></i> Distribuição por Potencial</h3>
-                            <canvas id="potentialChart" height="250"></canvas>
-                        </div>
-
-                        <div class="chart-card">
-                            <h3><i class="fas fa-tags"></i> Leads por Nicho</h3>
-                            <canvas id="nicheChart" height="250"></canvas>
-                        </div>
-
-                        <div class="chart-card">
-                            <h3><i class="fas fa-chart-line"></i> Atividade Semanal</h3>
-                            <canvas id="activityChart" height="250"></canvas>
-                        </div>
-
-                        <div class="chart-card">
-                            <h3><i class="fas fa-trending-up"></i> Performance de Conversão</h3>
-                            <canvas id="conversionChart" height="250"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- bloco IA -->
-                    <div class="ai-recommendations">
-                        <div class="ai-header">
-                            <i class="fas fa-robot"></i>
-                            <h3>Recomendações da IA</h3>
-                            <button class="btn btn-sm" onclick="showAIRecommendations()" title="Atualizar recomendações">
-                                <i class="fas fa-sync-alt"></i>
-                            </button>
-                        </div>
-
-                        <div class="recommendations-grid" id="aiRecommendations">
-                            <!-- preenchido via JS -->
-                        </div>
+                <!-- Top Oportunidades (IA comercial) -->
+                <div class="quick-actions" id="topOpportunitiesWrapper">
+                    <h3><i class="fas fa-handshake"></i> Top Oportunidades do Dia</h3>
+                    <div class="actions-grid" id="topOpportunities">
+                        <!-- preenchido via main.js -->
                     </div>
                 </div>
 
-                <!-- ações rápidas -->
-                <div class="quick-actions">
-                    <h3><i class="fas fa-bolt"></i> Ações Rápidas</h3>
+                <!-- ===== NOVO LAYOUT: GRÁFICOS EM LARGURA TOTAL ===== -->
+                <div class="dashboard-full-content">
+                    
+                    <!-- Container de gráficos em grid 2x2 -->
+                    <div class="charts-grid-full">
+                        <div class="chart-card-full">
+                            <h3><i class="fas fa-chart-pie"></i> Distribuição por Potencial</h3>
+                            <canvas id="potentialChart"></canvas>
+                        </div>
 
-                    <div class="actions-grid">
-                        <button class="action-card"
-                                onclick="plenaSystem.filterLeads('critical')">
-                            <i class="fas fa-fire"></i>
-                            <span>Ver Leads Críticos</span>
-                        </button>
+                        <div class="chart-card-full">
+                            <h3><i class="fas fa-tags"></i> Leads por Nicho</h3>
+                            <canvas id="nicheChart"></canvas>
+                        </div>
 
-                        <button class="action-card"
-                                onclick="runIAProspecting()">
-                            <i class="fas fa-search-plus"></i>
-                            <span>Nova Busca IA</span>
-                        </button>
+                        <div class="chart-card-full">
+                            <h3><i class="fas fa-chart-line"></i> Atividade Semanal</h3>
+                            <canvas id="activityChart"></canvas>
+                        </div>
 
-                        <button class="action-card"
-                                onclick="showTodaysStrategy()">
-                            <i class="fas fa-chess-knight"></i>
-                            <span>Estratégia do Dia</span>
-                        </button>
-
-                        <button class="action-card"
-                                onclick="generateQuickReport()">
-                            <i class="fas fa-file-alt"></i>
-                            <span>Relatório Rápido</span>
-                        </button>
-
-                        <button class="action-card"
-                                onclick="iaAssistant.showScriptTemplates()">
-                            <i class="fas fa-scroll"></i>
-                            <span>Scripts de Ligação</span>
-                        </button>
-
-                        <button class="action-card"
-                                onclick="testNotificationSystem()">
-                            <i class="fas fa-bell"></i>
-                            <span>Testar Notificação</span>
-                        </button>
+                        <div class="chart-card-full">
+                            <h3><i class="fas fa-trending-up"></i> Performance de Conversão</h3>
+                            <canvas id="conversionChart"></canvas>
+                        </div>
                     </div>
+
+                    <!-- ===== AÇÕES RÁPIDAS ABAIXO DOS GRÁFICOS ===== -->
+                    <div class="quick-actions-full">
+                        <div class="quick-actions-header">
+                            <h3><i class="fas fa-bolt"></i> Ações Rápidas do Sistema</h3>
+                            <p>Acesse rapidamente as principais funcionalidades</p>
+                        </div>
+
+                        <div class="actions-grid-full">
+                            <button class="action-card-full"
+                                    onclick="plenaSystem.filterLeads && plenaSystem.filterLeads('critical')">
+                                <div class="action-icon">
+                                    <i class="fas fa-fire"></i>
+                                </div>
+                                <div class="action-content">
+                                    <span class="action-title">Ver Leads Críticos</span>
+                                    <span class="action-desc">Priorize contatos urgentes</span>
+                                </div>
+                            </button>
+
+                            <button class="action-card-full"
+                                    onclick="iaProspectingTrigger()">
+                                <div class="action-icon">
+                                    <i class="fas fa-search-plus"></i>
+                                </div>
+                                <div class="action-content">
+                                    <span class="action-title">Nova Busca IA</span>
+                                    <span class="action-desc">Encontre leads potenciais</span>
+                                </div>
+                            </button>
+
+                            <button class="action-card-full"
+                                    onclick="showTodaysStrategy()">
+                                <div class="action-icon">
+                                    <i class="fas fa-chess-knight"></i>
+                                </div>
+                                <div class="action-content">
+                                    <span class="action-title">Estratégia do Dia</span>
+                                    <span class="action-desc">Scripts atualizados</span>
+                                </div>
+                            </button>
+
+                            <button class="action-card-full"
+                                    onclick="generateQuickReport()">
+                                <div class="action-icon">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="action-content">
+                                    <span class="action-title">Relatório Rápido</span>
+                                    <span class="action-desc">Resumo do desempenho</span>
+                                </div>
+                            </button>
+
+                            <button class="action-card-full"
+                                    onclick="iaAssistant.showScriptTemplates && iaAssistant.showScriptTemplates()">
+                                <div class="action-icon">
+                                    <i class="fas fa-scroll"></i>
+                                </div>
+                                <div class="action-content">
+                                    <span class="action-title">Scripts de Ligação</span>
+                                    <span class="action-desc">Modelos prontos</span>
+                                </div>
+                            </button>
+
+                            <button class="action-card-full"
+                                    onclick="testNotificationSystem()">
+                                <div class="action-icon">
+                                    <i class="fas fa-bell"></i>
+                                </div>
+                                <div class="action-content">
+                                    <span class="action-title">Testar Notificação</span>
+                                    <span class="action-desc">Verifique o sistema</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
             </section>
 
@@ -285,7 +317,7 @@
                 </div>
 
                 <div class="leads-grid" id="leadsContainer">
-                    <!-- cards de leads via JS -->
+                    <!-- cards de leads via main.js -->
                 </div>
             </section>
 
@@ -300,7 +332,7 @@
                     <div class="ai-header">
                         <i class="fas fa-robot"></i>
                         <h3>Estratégias por Nicho - São José dos Campos</h3>
-                        <button class="btn btn-sm" onclick="iaAssistant.generatePerformanceReport()">
+                        <button class="btn btn-sm" onclick="iaAssistant.generatePerformanceReport && iaAssistant.generatePerformanceReport()">
                             <i class="fas fa-chart-bar"></i> Relatório
                         </button>
                     </div>
@@ -308,29 +340,29 @@
                     <div class="recommendations-grid">
                         <div class="recommendation-card">
                             <h4>👨‍⚕️ Profissionais Liberais</h4>
-                            <p><strong>Abordagem:</strong> "Analisei que profissionais da sua área com presença digital conseguem até 40% mais agendamentos. Posso mostrar como aplicar isso no seu consultório?"</p>
-                            <p><strong>Argumento-chave:</strong> Agendamentos online 24h + Credibilidade digital</p>
-                            <p><strong>Estatística:</strong> 42% de taxa de conversão comprovada</p>
+                            <p><strong>Abordagem:</strong> "Profissionais da sua área com presença digital conseguem até 40% mais agendamentos. Posso te mostrar como aplicar isso no seu consultório?"</p>
+                            <p><strong>Argumento-chave:</strong> Agendamento online 24h + Autoridade</p>
+                            <p><strong>Estatística:</strong> 42% de taxa de conversão</p>
                         </div>
 
                         <div class="recommendation-card">
                             <h4>🔧 Serviços Especializados</h4>
-                            <p><strong>Abordagem:</strong> "Notamos que serviços como o seu que aparecem no Google quando alguém busca 'emergência' conseguem 3x mais clientes. Podemos colocar seu negócio nessa posição?"</p>
-                            <p><strong>Argumento-chave:</strong> Visibilidade em emergências + Agendamento simplificado</p>
+                            <p><strong>Abordagem:</strong> "Negócios que aparecem no Google em 'emergência' conseguem 3x mais chamadas. Vamos posicionar o seu assim?"</p>
+                            <p><strong>Argumento-chave:</strong> Urgência local + Resposta rápida</p>
                             <p><strong>Estatística:</strong> 38% de taxa de conversão</p>
                         </div>
 
                         <div class="recommendation-card">
                             <h4>🏪 Comércio Local</h4>
-                            <p><strong>Abordagem:</strong> "Seus produtos são excelentes, mas você está perdendo as vendas do turno da noite e finais de semana. Com um e-commerce, sua loja ficaria aberta 24h."</p>
-                            <p><strong>Argumento-chave:</strong> Vitrine 24h + Vendas fora do horário comercial</p>
+                            <p><strong>Abordagem:</strong> "Seus produtos são bons, mas você está fechado à noite. E-commerce deixa sua vitrine aberta 24h."</p>
+                            <p><strong>Argumento-chave:</strong> Vendas fora do horário</p>
                             <p><strong>Estatística:</strong> 35% de taxa de conversão</p>
                         </div>
 
                         <div class="recommendation-card">
                             <h4>💪 Saúde e Bem-estar</h4>
-                            <p><strong>Abordagem:</strong> "Sua academia/clínica tem ótima estrutura! Mas muitos potenciais alunos buscam primeiro online. Podemos colocar seu negócio na frente desses buscadores?"</p>
-                            <p><strong>Argumento-chave:</strong> Captação contínua + Agendamento online</p>
+                            <p><strong>Abordagem:</strong> "Muita gente pesquisa primeiro online antes de visitar. Vamos fazer você ser a primeira opção que aparece?"</p>
+                            <p><strong>Argumento-chave:</strong> Captação contínua + Agendamento direto</p>
                             <p><strong>Estatística:</strong> 45% de taxa de conversão</p>
                         </div>
                     </div>
@@ -341,38 +373,38 @@
 
                     <div class="actions-grid">
                         <button class="action-card"
-                                onclick="iaAssistant.showScriptTemplates()">
+                                onclick="iaAssistant.showScriptTemplates && iaAssistant.showScriptTemplates()">
                             <i class="fas fa-scroll"></i>
                             <span>Scripts de Ligação</span>
                         </button>
 
                         <button class="action-card"
-                                onclick="iaAssistant.showEmailTemplates()">
+                                onclick="iaAssistant.showEmailTemplates && iaAssistant.showEmailTemplates()">
                             <i class="fas fa-envelope"></i>
                             <span>Templates de Email</span>
                         </button>
 
                         <button class="action-card"
-                                onclick="iaAssistant.showObjectionHandling()">
+                                onclick="iaAssistant.showObjectionHandling && iaAssistant.showObjectionHandling()">
                             <i class="fas fa-comments"></i>
                             <span>Tratativa de Objeções</span>
                         </button>
 
                         <button class="action-card"
-                                onclick="iaAssistant.showROICalculator()">
+                                onclick="iaAssistant.showROICalculator && iaAssistant.showROICalculator()">
                             <i class="fas fa-calculator"></i>
                             <span>Calculadora de ROI</span>
                         </button>
 
                         <button class="action-card"
-                                onclick="iaAssistant.exportIAData()">
+                                onclick="iaAssistant.exportIAData && iaAssistant.exportIAData()">
                             <i class="fas fa-download"></i>
                             <span>Exportar Dados IA</span>
                         </button>
 
                         <button class="action-card"
                                 style="border-color: var(--danger);"
-                                onclick="iaAssistant.resetIAData()">
+                                onclick="iaAssistant.resetIAData && iaAssistant.resetIAData()">
                             <i class="fas fa-redo"></i>
                             <span>Resetar IA</span>
                         </button>
@@ -431,22 +463,22 @@
                 <div class="charts-container">
                     <div class="chart-card">
                         <h3><i class="fas fa-chart-bar"></i> Evolução de Leads por Mês</h3>
-                        <canvas id="monthlyLeadsChart" height="250"></canvas>
+                        <canvas id="monthlyLeadsChart"></canvas>
                     </div>
 
                     <div class="chart-card">
                         <h3><i class="fas fa-tachometer-alt"></i> Desempenho por Nicho</h3>
-                        <canvas id="performanceChart" height="250"></canvas>
+                        <canvas id="performanceChart"></canvas>
                     </div>
 
                     <div class="chart-card">
                         <h3><i class="fas fa-funnel-dollar"></i> Funil de Conversão</h3>
-                        <canvas id="funnelChart" height="250"></canvas>
+                        <canvas id="funnelChart"></canvas>
                     </div>
 
                     <div class="chart-card">
                         <h3><i class="fas fa-calendar-alt"></i> Atividade por Período</h3>
-                        <canvas id="timelineChart" height="250"></canvas>
+                        <canvas id="timelineChart"></canvas>
                     </div>
                 </div>
 
@@ -467,13 +499,13 @@
                         </button>
 
                         <button class="action-card"
-                                onclick="iaAssistant.exportIAData()">
+                                onclick="iaAssistant.exportIAData && iaAssistant.exportIAData()">
                             <i class="fas fa-file-code"></i>
                             <span>Dados da IA</span>
                         </button>
 
                         <button class="action-card"
-                                onclick="notificationSystem.exportNotifications()">
+                                onclick="notificationSystem.exportNotifications && notificationSystem.exportNotifications()">
                             <i class="fas fa-bell"></i>
                             <span>Notificações</span>
                         </button>
@@ -502,13 +534,13 @@
 
                         <div class="header-actions">
                             <button class="btn btn-sm"
-                                    onclick="notificationSystem.cleanupOldNotifications()">
+                                    onclick="notificationSystem.cleanupOldNotifications && notificationSystem.cleanupOldNotifications()">
                                 <i class="fas fa-trash"></i>
                                 Limpar Antigos
                             </button>
 
                             <button class="btn btn-sm"
-                                    onclick="notificationSystem.clearAllNotifications()">
+                                    onclick="notificationSystem.clearAllNotifications && notificationSystem.clearAllNotifications()">
                                 <i class="fas fa-broom"></i>
                                 Limpar Todos
                             </button>
@@ -516,7 +548,7 @@
                     </div>
 
                     <div id="alertsContainer">
-                        <!-- alertas via JS -->
+                        <!-- alertas via notifications.js -->
                     </div>
                 </div>
 
@@ -525,7 +557,7 @@
 
                     <div class="actions-grid">
                         <button class="action-card"
-                                onclick="notificationSystem.checkPendingActions()">
+                                onclick="notificationSystem.checkPendingActions && notificationSystem.checkPendingActions()">
                             <i class="fas fa-sync"></i>
                             <span>Verificar Ações Pendentes</span>
                         </button>
@@ -543,13 +575,13 @@
                         </button>
 
                         <button class="action-card"
-                                onclick="notificationSystem.addDailyGoalNotification()">
+                                onclick="notificationSystem.addDailyGoalNotification && notificationSystem.addDailyGoalNotification()">
                             <i class="fas fa-bullseye"></i>
                             <span>Meta do Dia</span>
                         </button>
 
                         <button class="action-card"
-                                onclick="notificationSystem.exportNotifications()">
+                                onclick="notificationSystem.exportNotifications && notificationSystem.exportNotifications()">
                             <i class="fas fa-download"></i>
                             <span>Exportar Notificações</span>
                         </button>
@@ -565,11 +597,78 @@
 
         </div> <!-- /content-area -->
     </main>
+    
 </div> <!-- /app-container -->
 
+<!-- ========== MODAL IA PROSPECÇÃO ========== -->
+<div id="iaProspectModal" class="ia-prospect-modal">
+    <div class="ia-prospect-content">
+        <div class="ia-prospect-header">
+            <h3><i class="fas fa-robot"></i> IA de Prospecção Inteligente</h3>
+            <button class="ia-close-btn" onclick="closeIaProspectModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="ia-prospect-body">
+            <div class="search-config">
+                <div class="form-group">
+                    <label><i class="fas fa-tag"></i> Nicho de Busca</label>
+                    <select id="prospectNiche" class="form-control">
+                        <option value="Profissionais Liberais">👨‍⚕️ Profissionais Liberais</option>
+                        <option value="Serviços Especializados">🔧 Serviços Especializados</option>
+                        <option value="Comércio Local">🏪 Comércio Local</option>
+                        <option value="Saúde e Bem-estar">💪 Saúde e Bem-estar</option>
+                        <option value="Beleza e Estética">💅 Beleza e Estética</option>
+                        <option value="Alimentação">🍕 Alimentação</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-map-marker-alt"></i> Localização</label>
+                    <input type="text" id="prospectLocation" class="form-control" 
+                           value="São José dos Campos" placeholder="Digite a cidade...">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-filter"></i> Filtros Avançados</label>
+                    <div class="filters-grid">
+                        <label class="filter-option">
+                            <input type="checkbox" id="filterDigital" checked>
+                            <span>Presença Digital Fraca</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" id="filterRecent" checked>
+                            <span>Negócios Recentes</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" id="filterHighPotential">
+                            <span>Alto Potencial</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="search-results" id="prospectResults">
+                <div class="results-placeholder">
+                    <i class="fas fa-search"></i>
+                    <p>Configure os filtros e clique em "Iniciar Busca IA" para encontrar leads potenciais</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="ia-prospect-footer">
+            <button class="btn btn-outline" onclick="closeIaProspectModal()">
+                <i class="fas fa-times"></i> Cancelar
+            </button>
+            <button class="btn btn-primary" onclick="startIaProspecting()">
+                <i class="fas fa-play"></i> Iniciar Busca IA
+            </button>
+        </div>
+    </div>
+</div>
 
-<!-- ========== MODAIS ========== -->
-
+<!-- ========== MODAIS EXISTENTES ========== -->
 <!-- Modal: Novo Lead -->
 <div class="modal" id="addLeadModal">
     <div class="modal-content">
@@ -617,9 +716,15 @@
             </div>
 
             <div class="form-group">
+                <label><i class="fas fa-globe"></i> Presença Digital (site / Instagram / Google Perfil)</label>
+                <input type="text" class="form-control" id="newLeadDigital"
+                       placeholder="Ex: instagram.com/padariasaojose | www.padariasaojose.com.br">
+            </div>
+
+            <div class="form-group">
                 <label><i class="fas fa-sticky-note"></i> Observações Iniciais</label>
                 <textarea class="form-control" id="newLeadNotes"
-                          placeholder="Informações relevantes sobre o lead, situação digital atual, potencial observado..."
+                          placeholder="Situação digital atual, potencial observado, objeções prováveis..."
                           rows="3"></textarea>
             </div>
 
@@ -639,73 +744,7 @@
     </div>
 </div>
 
-<!-- Modal: IA Prospecção -->
-<div class="modal" id="iaProspectingModal">
-    <div class="modal-content" style="max-width: 600px;">
-        <div class="modal-header">
-            <h3><i class="fas fa-robot"></i> IA de Prospecção - Busca Inteligente</h3>
-            <button class="btn btn-secondary"
-                    onclick="closeModal('iaProspectingModal')">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-
-        <div class="modal-body">
-            <div class="form-group">
-                <label><i class="fas fa-filter"></i> Selecione o Nicho para Busca:</label>
-                <select class="form-control" id="prospectingNiche">
-                    <option value="Profissionais Liberais">👨‍⚕️ Profissionais Liberais</option>
-                    <option value="Serviços Especializados">🔧 Serviços Especializados</option>
-                    <option value="Comércio Local">🏪 Comércio Local</option>
-                    <option value="Saúde e Bem-estar">💪 Saúde e Bem-estar</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label><i class="fas fa-map-pin"></i> Localização:</label>
-                <input type="text" class="form-control" id="prospectingLocation"
-                       value="São José dos Campos" readonly>
-            </div>
-
-            <div class="form-group">
-                <label><i class="fas fa-sliders-h"></i> Parâmetros da Busca:</label>
-
-                <div class="search-params">
-                    <label class="checkbox-label">
-                        <input type="checkbox" checked> Análise de Google Meu Negócio
-                    </label>
-
-                    <label class="checkbox-label">
-                        <input type="checkbox" checked> Presença em Redes Sociais
-                    </label>
-
-                    <label class="checkbox-label">
-                        <input type="checkbox"> Website Ativo
-                    </label>
-
-                    <label class="checkbox-label">
-                        <input type="checkbox" checked> Avaliações Online
-                    </label>
-                </div>
-            </div>
-
-            <button class="btn btn-primary"
-                    onclick="startProspecting()"
-                    id="startProspectingBtn">
-                <i class="fas fa-search"></i>
-                <span>Iniciar Busca IA</span>
-            </button>
-
-            <div id="prospectingResults"
-                 style="display:none; margin-top:20px;">
-                <h4><i class="fas fa-bullseye"></i> Leads Encontrados</h4>
-                <div id="prospectingList"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal: Detalhes Lead -->
+<!-- Modal: Lead Details -->
 <div class="modal" id="leadDetailsModal">
     <div class="modal-content">
         <div class="modal-header">
@@ -725,7 +764,7 @@
             <div class="form-group">
                 <label><i class="fas fa-sticky-note"></i> Observações do Contato</label>
                 <textarea class="form-control" id="contactNotes"
-                          placeholder="Registre observações, andamentos, próximos passos..."
+                          placeholder="Registre objeções, próximos passos, gatilho de urgência..."
                           rows="4"></textarea>
             </div>
 
@@ -763,7 +802,7 @@
             <div class="timeline" id="timeline">
                 <h4><i class="fas fa-history"></i> Histórico de Contato</h4>
                 <div class="timeline-content" id="timelineContent">
-                    <!-- histórico via JS -->
+                    <!-- histórico via main.js -->
                 </div>
             </div>
         </div>
@@ -776,8 +815,36 @@
 <script src="assets/js/notifications.js"></script>
 <script src="assets/js/main.js"></script>
 
+<!-- Bots Inteligentes -->
+<script src="assets/js/mission-bot.js"></script>
+<script src="assets/js/ia-prospecting.js"></script>
+
 <script>
-/* ==== FUNÇÕES GLOBAIS DE MODAL E LÓGICA AUXILIAR ==== */
+/* ==== FUNÇÕES GLOBAIS AUXILIARES ==== */
+
+function iaProspectingTrigger() {
+    const modal = document.getElementById('iaProspectModal');
+    if (modal) {
+        modal.classList.add('open');
+    } else {
+        alert('Módulo IA Prospecting não carregado.');
+    }
+}
+
+function closeIaProspectModal() {
+    const modal = document.getElementById('iaProspectModal');
+    if (modal) {
+        modal.classList.remove('open');
+    }
+}
+
+function startIaProspecting() {
+    if (window.iaProspecting && window.iaProspecting.startProspecting) {
+        window.iaProspecting.startProspecting();
+    } else {
+        alert('Sistema de prospecção IA não inicializado.');
+    }
+}
 
 function openAddLeadModal() {
     document.getElementById('addLeadModal').style.display = 'flex';
@@ -790,6 +857,72 @@ function closeModal(id) {
 
 function closeAllModals() {
     document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+    const iaModal = document.getElementById('iaProspectModal');
+    if (iaModal) iaModal.classList.remove('open');
+}
+
+// ... (restante das funções globais permanecem iguais)
+function addNewLead() {
+    const name = document.getElementById('newLeadName').value.trim();
+    const niche = document.getElementById('newLeadNiche').value;
+    const address = document.getElementById('newLeadAddress').value.trim();
+    const contact = document.getElementById('newLeadContact').value.trim();
+    const digital = document.getElementById('newLeadDigital').value.trim();
+    const notes = document.getElementById('newLeadNotes').value.trim();
+
+    if (!name || !niche || !address || !contact) {
+        showNotification('Erro', 'Preencha todos os campos obrigatórios.', 'error');
+        return;
+    }
+
+    if (window.plenaSystem) {
+        const newLead = {
+            id: Date.now(),
+            name: name.toUpperCase(),
+            niche: niche,
+            address: address,
+            contact: contact,
+            digitalPresence: digital,
+            potential: calculateInitialPotential(niche, notes),
+            status: 'high',
+            category: niche,
+            conversionProbability: calculateInitialProbability(niche),
+            notes: notes,
+            lastContact: 'Nunca',
+            nextAction: 'Primeiro contato',
+            contactHistory: [],
+            contactStatus: 'pending',
+            createdAt: new Date().toISOString()
+        };
+
+        window.plenaSystem.leads.unshift(newLead);
+        window.plenaSystem.saveLeads();
+        window.plenaSystem.loadDashboardData();
+        window.plenaSystem.loadLeadsData();
+
+        closeModal('addLeadModal');
+        showNotification('Sucesso', `Lead "${name}" cadastrado com sucesso!`, 'success');
+
+        // sugestão IA
+        if (window.iaAssistant && window.iaAssistant.generateStrategy) {
+            setTimeout(() => {
+                const strategy = window.iaAssistant.generateStrategy(newLead);
+                showNotification(
+                    '🎯 Estratégia da IA',
+                    `Estratégia gerada para ${name}. Use o script: "${strategy.scriptLigacao.substring(0, 100)}..."`,
+                    'info'
+                );
+            }, 800);
+        }
+
+        // limpar form
+        document.getElementById('newLeadName').value = '';
+        document.getElementById('newLeadNiche').value = '';
+        document.getElementById('newLeadAddress').value = '';
+        document.getElementById('newLeadContact').value = '';
+        document.getElementById('newLeadDigital').value = '';
+        document.getElementById('newLeadNotes').value = '';
+    }
 }
 
 function calculateInitialPotential(niche, notes) {
@@ -820,122 +953,26 @@ function calculateInitialProbability(niche) {
     return baseProbabilities[niche] || 50;
 }
 
-function addNewLead() {
-    const name = document.getElementById('newLeadName').value.trim();
-    const niche = document.getElementById('newLeadNiche').value;
-    const address = document.getElementById('newLeadAddress').value.trim();
-    const contact = document.getElementById('newLeadContact').value.trim();
-    const notes = document.getElementById('newLeadNotes').value.trim();
-
-    if (!name || !niche || !address || !contact) {
-        showNotification('Erro', 'Preencha todos os campos obrigatórios.', 'error');
-        return;
-    }
-
-    if (window.plenaSystem) {
-        const newLead = {
-            id: Date.now(),
-            name: name.toUpperCase(),
-            niche: niche,
-            address: address,
-            contact: contact,
-            potential: calculateInitialPotential(niche, notes),
-            status: 'high',
-            category: niche,
-            conversionProbability: calculateInitialProbability(niche),
-            notes: notes,
-            lastContact: 'Nunca',
-            nextAction: 'Primeiro contato',
-            contactHistory: [],
-            contactStatus: 'pending',
-            createdAt: new Date().toISOString()
-        };
-
-        window.plenaSystem.leads.unshift(newLead);
-        window.plenaSystem.saveLeads();
-        window.plenaSystem.loadDashboardData();
-
-        if (window.plenaSystem.currentSection === 'leads') {
-            window.plenaSystem.loadLeadsData();
-        }
-
-        closeModal('addLeadModal');
-        showNotification('Sucesso', `Lead "${name}" cadastrado com sucesso!`, 'success');
-
-        // sugestão IA
-        if (window.iaAssistant) {
-            setTimeout(() => {
-                const strategy = window.iaAssistant.generateStrategy(newLead);
-                showNotification(
-                    '🎯 Estratégia da IA',
-                    `Estratégia gerada para ${name}. Use o script: "${strategy.scriptLigacao.substring(0, 100)}..."`,
-                    'info'
-                );
-            }, 1000);
-        }
-
-        // limpar form
-        document.getElementById('newLeadName').value = '';
-        document.getElementById('newLeadNiche').value = '';
-        document.getElementById('newLeadAddress').value = '';
-        document.getElementById('newLeadContact').value = '';
-        document.getElementById('newLeadNotes').value = '';
-    }
-}
-
-function startProspecting() {
-    const niche = document.getElementById('prospectingNiche').value;
-    const btn = document.getElementById('startProspectingBtn');
-    const results = document.getElementById('prospectingResults');
-
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
-    btn.disabled = true;
-
-    setTimeout(() => {
-        btn.innerHTML = '<i class="fas fa-search"></i> Busca Concluída';
-        results.style.display = 'block';
-
-        document.getElementById('prospectingList').innerHTML = `
-            <div class="prospecting-result">
-                <div class="result-header">
-                    <h5>✅ 23 leads encontrados</h5>
-                    <span class="result-badge">${niche}</span>
-                </div>
-                <div class="result-stats">
-                    <div>📊 15 com alto potencial</div>
-                    <div>📞 8 nunca contactados</div>
-                    <div>🎯 12 sem presença digital</div>
-                </div>
-                <button class="btn btn-primary btn-sm" onclick="importProspectingResults()">
-                    <i class="fas fa-download"></i> Importar para Sistema
-                </button>
-            </div>
-        `;
-
-        showNotification('IA Prospecção', `Busca concluída: 23 leads encontrados em ${niche}`, 'success');
-    }, 1500);
-}
-
-function importProspectingResults() {
-    showNotification('Sistema', 'Importação automática virá na v1.1', 'info');
-    closeModal('iaProspectingModal');
-}
-
 function saveLeadDetails() {
     showNotification('Sistema', 'Detalhes do lead salvos com sucesso!', 'success');
     closeModal('leadDetailsModal');
 }
 
-/* ===== Funções auxiliares ===== */
-
 function showTodaysStrategy() {
-    if (window.iaAssistant) {
+    if (window.iaAssistant && window.iaAssistant.generateStrategy) {
         const strategy = window.iaAssistant.generateStrategy({
             nicho: 'Profissionais Liberais',
             name: 'Lead do Dia'
         });
 
-        alert(`🎯 ESTRATÉGIA DO DIA - Profissionais Liberais\n\n${strategy.scriptLigacao}\n\n📧 Email:\n${strategy.emailTemplate.substring(0,200)}...`);
+        alert(
+`🎯 ESTRATÉGIA DO DIA - Profissionais Liberais
+
+${strategy.scriptLigacao}
+
+📧 Email:
+${strategy.emailTemplate.substring(0,200)}...`
+        );
     }
 }
 
@@ -989,7 +1026,7 @@ function exportLeadsData() {
 }
 
 function testNotificationSystem() {
-    if (window.notificationSystem) {
+    if (window.notificationSystem && window.notificationSystem.showSuccessNotification) {
         window.notificationSystem.showSuccessNotification(
             'Teste de Notificação',
             'Isso é apenas um teste visual.'
@@ -997,24 +1034,21 @@ function testNotificationSystem() {
     }
 }
 
-/* ===== Atalhos de teclado / init ===== */
+/* ===== Inicialização ===== */
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Plena Captação v1.0 carregado.');
+    console.log('🚀 Sistema Inteligente de Captação carregado.');
 
-    // log de sistemas
-    const systems = ['plenaSystem', 'notificationSystem', 'iaAssistant'];
+    const systems = ['plenaSystem', 'notificationSystem', 'themeManager', 'iaAssistant'];
     const loaded = systems.filter(s => window[s]);
     console.log('✅ Sistemas carregados:', loaded.join(', '));
 
-    if (loaded.length === systems.length) {
+    if (window.notificationSystem && window.notificationSystem.showInfoNotification) {
         setTimeout(() => {
-            if (window.notificationSystem) {
-                window.notificationSystem.showInfoNotification(
-                    'Bem-vindo ao Plena Captação!',
-                    'Sistema carregado. Comece pelo dashboard ou cadastre seus primeiros leads.'
-                );
-            }
-        }, 1200);
+            window.notificationSystem.showInfoNotification(
+                'Sistema Inteligente de Captação',
+                'Pipeline ativo. Abra o painel Missão do Dia e execute as prioridades.'
+            );
+        }, 1000);
     }
 
     // atalhos
@@ -1039,10 +1073,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-/* ===== Eventos globais de erro / offline ===== */
+/* ===== Eventos globais ===== */
 window.addEventListener('error', e => {
     console.error('Erro global:', e.error);
-    if (window.notificationSystem) {
+    if (window.notificationSystem && window.notificationSystem.showErrorNotification) {
         window.notificationSystem.showErrorNotification(
             'Erro no Sistema',
             'Ocorreu um erro inesperado. Recarregue se persistir.'
@@ -1051,7 +1085,7 @@ window.addEventListener('error', e => {
 });
 
 window.addEventListener('online', () => {
-    if (window.notificationSystem) {
+    if (window.notificationSystem && window.notificationSystem.showSuccessNotification) {
         window.notificationSystem.showSuccessNotification(
             'Conexão Restaurada',
             'Sistema sincronizado com sucesso.'
@@ -1060,7 +1094,7 @@ window.addEventListener('online', () => {
 });
 
 window.addEventListener('offline', () => {
-    if (window.notificationSystem) {
+    if (window.notificationSystem && window.notificationSystem.showWarningNotification) {
         window.notificationSystem.showWarningNotification(
             'Modo Offline',
             'Algumas funções podem estar limitadas. Seus dados locais estão seguros.'
@@ -1073,221 +1107,230 @@ window.debugSystem = function () {
     return {
         plenaSystem: window.plenaSystem,
         notificationSystem: window.notificationSystem,
+        themeManager: window.themeManager,
         iaAssistant: window.iaAssistant,
-        version: '1.0.0'
+        iaProspecting: window.iaProspecting,
+        version: 'si-captação-2025'
     };
 };
 </script>
 
-<!-- ===== ESTILOS ESPECÍFICOS DOS MODAIS ===== -->
+<!-- ===== ESTILOS PARA O NOVO LAYOUT DO DASHBOARD ===== -->
 <style>
-.modal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.7);
-    z-index: 10000;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(5px);
-}
-
-.modal-content {
-    background: var(--bg-card);
-    border-radius: 16px;
-    box-shadow: var(--shadow-lg);
-    max-width: 500px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
-    border: 1px solid var(--border-color);
-    animation: modalSlideIn 0.3s ease;
-}
-
-@keyframes modalSlideIn {
-    from { opacity: 0; transform: scale(0.9) translateY(-20px); }
-    to   { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-.modal-header {
-    padding: 25px;
-    background: linear-gradient(135deg, var(--primary) 0%, #2d2d2d 100%);
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 16px 16px 0 0;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.modal-header h3 {
-    margin: 0;
-    font-size: 1.1em;
-    font-weight: 600;
-    line-height: 1.3;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.modal-body {
-    padding: 25px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: var(--text-primary);
-    font-size: 0.9rem;
-}
-
-.form-control {
+/* ===== NOVO LAYOUT DASHBOARD ===== */
+.dashboard-full-content {
     width: 100%;
-    padding: 12px 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background: var(--bg-primary);
-    color: var(--text-primary);
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Grid de gráficos em largura total */
+.charts-grid-full {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.chart-card-full {
+    background: var(--bg-card);
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
     transition: all 0.25s ease;
-    font-size: 0.95em;
-    line-height: 1.3;
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: var(--secondary);
-    box-shadow: 0 0 0 3px rgba(255,107,53,0.15);
-}
-
-.form-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 25px;
-    flex-wrap: wrap;
-}
-
-.search-params {
-    display: grid;
-    gap: 10px;
-    margin-top: 10px;
-    font-size: 0.9em;
-}
-
-.checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: normal;
-    cursor: pointer;
-    color: var(--text-secondary);
-}
-
-.checkbox-label input {
-    margin: 0;
-}
-
-.prospecting-result {
-    background: var(--bg-secondary);
-    padding: 20px;
-    border-radius: 12px;
     border: 1px solid var(--border-color);
-    font-size: 0.9rem;
-    line-height: 1.4;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
 }
 
-.result-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    font-size: 0.95rem;
-    line-height: 1.3;
+.chart-card-full:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.chart-card-full h3 {
+    margin-bottom: 20px;
     color: var(--text-primary);
+    font-size: 1.15em;
     font-weight: 600;
-}
-
-.result-badge {
-    background: var(--secondary);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: 0.75em;
-    font-weight: 600;
-    line-height: 1.2;
-}
-
-.result-stats {
-    display: grid;
-    gap: 8px;
-    margin-bottom: 15px;
-    font-size: 0.9em;
-    color: var(--text-secondary);
-}
-
-.leads-stats {
     display: flex;
-    gap: 20px;
-    margin: 15px 0;
-    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
 }
 
-.stat-mini {
-    text-align: center;
-    padding: 10px 15px;
-    background: var(--bg-secondary);
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    min-width: 90px;
-}
-.stat-number {
-    display: block;
-    font-size: 1.4em;
-    font-weight: 700;
+.chart-card-full h3 i {
     color: var(--secondary);
 }
-.stat-label {
-    font-size: 0.8em;
-    color: var(--text-secondary);
+
+.chart-card-full canvas {
+    flex: 1;
+    width: 100% !important;
+    height: 250px !important;
+    max-height: 250px;
 }
 
-.timeline {
-    margin-top: 25px;
-    padding-top: 25px;
-    border-top: 1px solid var(--border-color);
+/* Ações rápidas em largura total */
+.quick-actions-full {
+    background: var(--bg-card);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    margin-bottom: 30px;
 }
-.timeline h4 {
-    margin-bottom: 15px;
+
+.quick-actions-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.quick-actions-header h3 {
+    font-size: 1.4em;
+    font-weight: 700;
     color: var(--text-primary);
-    font-size: 1em;
-    line-height: 1.3;
-    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
-.dashboard-time {
-    font-size: 0.8em;
+.quick-actions-header p {
     color: var(--text-secondary);
-    margin-top: 5px;
-    font-style: italic;
+    font-size: 1em;
 }
 
-/* mobile modal tweaks */
+.actions-grid-full {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.action-card-full {
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+    min-height: 80px;
+}
+
+.action-card-full:hover {
+    border-color: var(--secondary);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+    background: rgba(255,107,53,0.03);
+}
+
+.action-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2em;
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+}
+
+.action-card-full:hover .action-icon {
+    transform: scale(1.1);
+}
+
+.action-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.action-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95em;
+}
+
+.action-desc {
+    color: var(--text-secondary);
+    font-size: 0.85em;
+}
+
+/* Responsividade para o novo layout */
+@media (max-width: 1200px) {
+    .charts-grid-full {
+        grid-template-columns: 1fr;
+    }
+    
+    .actions-grid-full {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+}
+
 @media (max-width: 768px) {
-    .modal-content {
-        width: 95%;
-        margin: 20px;
+    .charts-grid-full {
+        gap: 20px;
     }
-    .form-actions {
+    
+    .chart-card-full {
+        padding: 20px;
+        min-height: 280px;
+    }
+    
+    .quick-actions-full {
+        padding: 20px;
+    }
+    
+    .actions-grid-full {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-card-full {
+        padding: 15px;
+    }
+    
+    .action-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1em;
+    }
+}
+
+@media (max-width: 480px) {
+    .chart-card-full {
+        padding: 15px;
+        min-height: 250px;
+    }
+    
+    .quick-actions-full {
+        padding: 15px;
+    }
+    
+    .action-card-full {
         flex-direction: column;
+        text-align: center;
+        gap: 10px;
+        padding: 20px 15px;
     }
+    
+    .action-content {
+        align-items: center;
+    }
+}
+
+/* Remove o layout antigo do dashboard */
+.dashboard-content {
+    display: none;
 }
 </style>
 

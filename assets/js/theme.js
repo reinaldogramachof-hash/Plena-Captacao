@@ -1,79 +1,102 @@
-// theme.js – Controle de tema Plena Captação v1.2 - CORRIGIDO
-// Corrigido: persistência no localStorage + sincronização total + função isDarkTheme
+// =============================================
+// THEME MANAGER v1.5 - Plena Informática - CORRIGIDO
+// Sistema de Captação de clientes
+// =============================================
+(function () {
+  const STORAGE_KEY = "plenaTheme";
 
-document.addEventListener("DOMContentLoaded", () => {
-  const themeToggle = document.getElementById("themeToggle");
-  const html = document.documentElement;
-  const sidebar = document.querySelector(".sidebar");
-
-  // Verifica o tema salvo ou padrão dark
-  const savedTheme = localStorage.getItem("plenaTheme") || "dark";
-  html.setAttribute("data-theme", savedTheme);
-  applyTheme(savedTheme);
-
-  // Atualiza visual e texto do botão
-  updateThemeButton(savedTheme);
-
-  // Ação do botão de alternância
-  themeToggle.addEventListener("click", () => {
-    const current = html.getAttribute("data-theme");
-    const next = current === "dark" ? "light" : "dark";
-
-    html.setAttribute("data-theme", next);
-    localStorage.setItem("plenaTheme", next);
-    applyTheme(next);
-    updateThemeButton(next);
-    showThemeNotification(next);
-    
-    // Dispara evento para outros componentes
-    window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: next } }));
-  });
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  const root = document.documentElement;
+  const btn = document.getElementById("themeToggle");
 
   function applyTheme(theme) {
-    // Aplica gradiente correto na sidebar
-    if (theme === "dark") {
-      sidebar.style.background = "linear-gradient(135deg, #000 0%, #1a1a1a 100%)";
-      sidebar.style.color = "#fff";
-      document.body.style.background = "var(--bg-primary)";
-    } else {
-      sidebar.style.background = "linear-gradient(135deg, #ffffff 0%, #f1f1f1 100%)";
-      sidebar.style.color = "#000";
-      document.body.style.background = "var(--bg-primary)";
+    root.setAttribute("data-theme", theme);
+    if (metaTheme) {
+      metaTheme.setAttribute("content", theme === "dark" ? "#000000" : "#ffffff");
     }
+    
+    // Atualiza rótulos do botão
+    if (btn) {
+      const iconSpan = btn.querySelector(".theme-icon");
+      const labelSpan = btn.querySelector(".theme-label");
+      if (iconSpan) iconSpan.textContent = theme === "dark" ? "🌙" : "☀️";
+      if (labelSpan) labelSpan.textContent = theme === "dark" ? "Modo Claro" : "Modo Escuro";
+    }
+
+    // Dispara evento para outros componentes
+    window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme } }));
+    
+    console.log(`🎨 Tema aplicado: ${theme}`);
   }
 
-  function updateThemeButton(theme) {
-    const icon = theme === "dark" ? "🌙" : "☀️";
-    const text = theme === "dark" ? "Modo Claro" : "Modo Escuro";
-    themeToggle.innerHTML = `<span>${icon}</span> ${text}`;
+  function getSavedTheme() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved === "light" || saved === "dark") return saved;
+    return root.getAttribute("data-theme") || "dark";
   }
 
-  function showThemeNotification(theme) {
-    const msg = theme === "dark" ? "Modo escuro ativado" : "Modo claro ativado";
-    const notif = document.createElement("div");
-    notif.textContent = msg;
-    notif.style.position = "fixed";
-    notif.style.top = "20px";
-    notif.style.right = "20px";
-    notif.style.background = theme === "dark" ? "#1a1a1a" : "#fff";
-    notif.style.color = theme === "dark" ? "#fff" : "#000";
-    notif.style.padding = "12px 18px";
-    notif.style.borderRadius = "8px";
-    notif.style.boxShadow = "0 5px 15px rgba(0,0,0,0.2)";
-    notif.style.zIndex = "2000";
-    notif.style.fontSize = "0.9rem";
-    notif.style.fontWeight = "500";
-    notif.style.transition = "opacity 0.3s ease";
-    document.body.appendChild(notif);
-
-    setTimeout(() => {
-      notif.style.opacity = "0";
-      setTimeout(() => notif.remove(), 400);
-    }, 1800);
+  function setTheme(theme) {
+    if (theme !== "light" && theme !== "dark") {
+      console.warn("Tema inválido:", theme);
+      return;
+    }
+    localStorage.setItem(STORAGE_KEY, theme);
+    applyTheme(theme);
   }
-});
 
-// Função global para verificar tema atual
-function isDarkTheme() {
-    return document.documentElement.getAttribute('data-theme') === 'dark';
-}
+  function toggle() {
+    const current = getSavedTheme();
+    const newTheme = current === "dark" ? "light" : "dark";
+    setTheme(newTheme);
+  }
+
+  // Funções auxiliares para gráficos
+  function getChartTextColor() {
+    const theme = getSavedTheme();
+    return theme === "dark" ? "#ffffff" : "#333333";
+  }
+
+  function getChartGridColor() {
+    const theme = getSavedTheme();
+    return theme === "dark" ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)";
+  }
+
+  function getChartBackgroundColor() {
+    const theme = getSavedTheme();
+    return theme === "dark" ? "#2e2e2e" : "#ffffff";
+  }
+
+  // Expondo como API global
+  window.themeManager = { 
+    get: getSavedTheme, 
+    set: setTheme, 
+    toggle,
+    getChartTextColor,
+    getChartGridColor,
+    getChartBackgroundColor
+  };
+
+  // Inicialização
+  document.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = getSavedTheme();
+    applyTheme(savedTheme);
+    
+    if (btn) {
+      btn.addEventListener("click", toggle);
+      btn.setAttribute("aria-label", `Alternar para modo ${savedTheme === 'dark' ? 'claro' : 'escuro'}`);
+    }
+
+    console.log("🎨 Theme Manager - Plena Informática");
+  });
+
+  // Suporte para mudança de tema via sistema operacional
+  if (window.matchMedia) {
+    const colorSchemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    colorSchemeQuery.addEventListener('change', (e) => {
+      if (!localStorage.getItem(STORAGE_KEY)) {
+        const theme = e.matches ? "dark" : "light";
+        applyTheme(theme);
+      }
+    });
+  }
+})();
